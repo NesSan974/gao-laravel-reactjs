@@ -31,4 +31,5 @@ Route::get('/clients/show',[ClientController::class, 'index']);
 
 
 Route::get('/attribution/show',[AttributionController::class, 'index']);
-
+Route::post('/attribution/add',[AttributionController::class, 'store']);
+Route::delete('/attribution/delete/{id}',[AttributionController::class, 'destroy']);

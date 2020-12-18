@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Ordinateur from '../components/Ordinateur';
+import Ordinateur from './Ordinateur';
 import AddOrdinateur from '../components/AddOrdinateur';
 
 import Grid, { GridSpacing } from '@material-ui/core/Grid';
@@ -25,11 +25,15 @@ class Home extends React.Component {
         super(props);
         this.state = {
             ordinateurs: [],
+            clients : [],
             date: new Date().toISOString().substr(0, 10),
         };
 
+        
+
         this.updateOrd = this.updateOrd.bind(this);
         this.getOrd = this.getOrd.bind(this);
+        this.getClients = this.getClients.bind(this);
         this.handleDateChange = this.handleDateChange.bind(this);
 
 
@@ -43,7 +47,7 @@ class Home extends React.Component {
     componentDidMount() {
 
         this.getOrd()
-
+        this.getClients()
     }
 
     componentWillUnmount() { }
@@ -55,19 +59,36 @@ class Home extends React.Component {
         })
     }
 
+    getClients() {
+        var tab = [];
+        Axios.get('/api/clients/show').then(({ data }) => {
+
+            data.data.forEach(client => {
+                tab.push(client)
+            });
+
+            this.setState({
+                clients : tab
+            })
+            
+
+
+        })
+    }
+
     handleDateChange(event) {
 
-        this.setState({ 
-            ordinateurs: [], 
+        this.setState({
+            ordinateurs: [],
             date: event.target.value
-         })
+        })
 
 
         Axios.post('/api/ordinateur/show', { 'date': event.target.value }).then(({ data }) => {
             this.setState({ ordinateurs: data.data })
-            console.log(this.state.ordinateurs)
-
             
+
+
         })
     }
 
@@ -94,16 +115,19 @@ class Home extends React.Component {
                     />
                 </div>
 
+
+
                 <div>
                     <AddOrdinateur onUpdate={this.updateOrd} />
                 </div>
                 <Grid container
                     spacing={5}>
 
+
                     {
                         this.state.ordinateurs.map((ord) => (
                             <Grid key={ord.id} item xs={4} >
-                                <Ordinateur ordinateur={ord} />
+                                <Ordinateur clients={this.state.clients} date={date} ordinateur={ord} />
                             </Grid>
 
                         ))

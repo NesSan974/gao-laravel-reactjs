@@ -41,7 +41,23 @@ class AttributionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $val = $request->validate([
+            'client_id' => 'required',
+            'ordinateur_id' => 'required',
+            'date' => 'required',
+            'horraire' => 'required',
+        ]);
+
+        $addAtt = new Attribution();
+
+        $addAtt->client_id = $val['client_id'];
+        $addAtt->ordinateur_id = $val['ordinateur_id'];
+        $addAtt->date = $val['date'];
+        $addAtt->horraire = $val['horraire'];
+
+        $addAtt->save();
+
+        return new RessourceAttribution($addAtt);
     }
 
     /**
@@ -84,8 +100,10 @@ class AttributionController extends Controller
      * @param  \App\Models\Attribution  $attribution
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Attribution $attribution)
+    public function destroy($id)
     {
-        //
+        $r  = Attribution::find($id);
+        Attribution::destroy($id);
+        return new RessourceAttribution($r);
     }
 }

@@ -18,8 +18,8 @@ class Client extends JsonResource
     {
         return [
             'id' => $this->id,
-            'nom' => $this->name,
-            'prenom' => $this->firstname,
+            'nom' => $this->nom,
+            'prenom' => $this->prenom,
            // 'attributions' => RessourceAttribution::collection($this->attributions),
 
         ];
